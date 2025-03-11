@@ -81,10 +81,14 @@
                         <div class="header__top__inner">
                             <div class="header__top__left">
                                 <ul>
-                                    <li>USD <span class="arrow_carrot-down"></span>
+                                    <li>Sign IN <span class="arrow_carrot-down"></span>
                                         <ul>
-                                            <li>EUR</li>
-                                            <li>USD</li>
+                                            {% if user.is_authenticated %}
+                                                <li><a href="{% url 'logout_view' %}">Logout</a></li>
+                                            {% else %}
+                                                <li><a href="{% url 'user_login' %}">Login</a></li>
+                                                <li><a href="{% url 'signup' %}">Sign up</a></li>
+                                            {% endif %}
                                         </ul>
                                     </li>
                                     <li>ENG <span class="arrow_carrot-down"></span>
@@ -102,12 +106,7 @@
                                     </a> <span class="arrow_carrot-down"></span></li>    {% endcomment %}
                                 </ul>
                                 <ul>
-                                 {% if user.is_authenticated %}
-                                    <li><a href="{% url 'logout_view' %}">Logout</a></li>
-                                 {% else %}
-                                     <li><a href="{% url 'user_login' %}">Login</a></li>
-                                     <li><a href="{% url 'signup' %}">Sign up</a></li>
-                                 {% endif %}
+                                 
                                 </ul>
                             </div>
                             <div class="header__logo" style="position: absolute; left: 46%; top: 22px; margin-left: -60px; " >

@@ -11,4 +11,4 @@ def about(request):
 def shop(request):
     products = Product.objects.all()
     cont = {'products':products}
-    return render(request,'shop/shop.html', cont )
+    return render(request,'shop/shop.html', cont)

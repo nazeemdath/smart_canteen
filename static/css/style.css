@@ -326,7 +326,7 @@ ol {
 }
 .header__top__left ul li {
   font-size: 14px;
-  color: #111111;
+  color: #201c1c;
   list-style: none;
   display: inline-block;
   margin-right: 30px;
@@ -335,7 +335,14 @@ ol {
   cursor: pointer;
 }
 .header__top__left ul li a {
-  color: #111111;
+  font-size: 14px;
+  color: #f5f0f0;
+  list-style: none;
+  display: inline-block;
+  margin-right: 30px;
+  position: relative;
+  padding: 2px 0;
+  cursor: pointer;
 }
 .header__top__left ul li:hover ul {
   top: 24px;
@@ -537,7 +544,7 @@ ol {
 
 .hero__text {
   text-align: center;
-  background: #ffffff;
+  background: #a4b89d;
   padding: 65px 70px 70px;
   position: relative;
 }
@@ -547,7 +554,7 @@ ol {
   top: 15px;
   height: calc(100% - 30px);
   width: calc(100% - 30px);
-  border: 1px dashed #f08632;
+  border: 1px dashed #2915de;
   content: "";
   opacity: 0.3;
 }
@@ -556,7 +563,6 @@ ol {
   color: #111111;
   line-height: 60px;
   font-weight: 700;
-  font-style: italic;
   margin-bottom: 18px;
   position: relative;
   top: 100px;
