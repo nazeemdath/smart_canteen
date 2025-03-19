@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'authentication'
+    'authentication',
+    'cart',
+    'checkout'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'canteen.urls'
@@ -65,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart'
             ],
         },
     },
@@ -129,3 +133,14 @@ MEDIA_ROOT = BASE_DIR /'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.CustomUser'
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Store session in DB
+SESSION_COOKIE_AGE = 86400  # Session lasts 1 day
+SESSION_SAVE_EVERY_REQUEST = True  # Save session on every request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Session persists after closing the browser
+
+LOGIN_URL = '/user_login/'  # Redirects unauthorized users to this page
+
+RAZORPAY_KEY_ID = "rzp_test_rrvmcB0p6o5hqa"
+RAZORPAY_KEY_SECRET = "DU7J1EMlwCUGqpYQojx3F8Bq"

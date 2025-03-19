@@ -10,7 +10,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="breadcrumb__links">
-                        <a href="./index.html">Home</a>
+                        <a href="{% url 'index' %}">Home</a>
                         <span>Shop</span>
                     </div>
                 </div>
@@ -53,26 +53,34 @@
                 </div>
             </div>
             <div class="row">
-                {% for product in products %}
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
-                        <div class="product__label">
-                            <span>{{ product.category }}</span>
+                    {% for product in products %}
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
+                                    <div class="product__label">
+                                        <span>{{ product.category }}</span>
+                                    </div>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">{{ product.name }}</a></h6>
+                                    <div class="product__item__price">₹{{ product.price }}</div>
+                                    
+                                    {% if product.stock > 0 %}
+                                        <div class="cart_add">
+                                            <a href="{% url 'cart:cartadd' product.id %}">Add to cart</a>
+                                        </div>
+                                    {% else %}
+                                        <div class="out_of_stock">
+                                            <span style="color: red; font-weight: bold;">Out of Stock</span>
+                                        </div>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">{{ product.name }}</a></h6>
-                        <div class="product__item__price">₹{{ product.price }}</div>
-                        <div class="cart_add">
-                            <a href="#">Add to cart</a>
-                        </div>
-                    </div>
-                    </div>
-                    </div>
                     {% endfor %}
+                </div>
 
-            </div>
             <div class="shop__last__option">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
@@ -81,7 +89,7 @@
                             <a href="#">2</a>
                             <a href="#">3</a>
                             <a href="#"><span class="arrow_carrot-right"></span></a>
-                        </div>
+                        </div>class
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="shop__last__text">

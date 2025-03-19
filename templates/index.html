@@ -20,7 +20,7 @@
           <div class="col-lg-8">
             <div class="hero__text">
               <h2>Making your life sweeter one bite at a time!</h2>
-              <a href="#" class="primary-btn">menu</a>
+              {% comment %} <a href="#" class="primary-btn">menu</a> {% endcomment %}
             </div>
           </div>
         </div>
@@ -55,21 +55,21 @@
             <p>Tasty</p>
             <div id="bar1" class="barfiller">
               <div class="tipWrap"><span class="tip"></span></div>
-              <span class="fill" data-percentage="99"></span>
+              <span class="fill" data-percentage="99.9"></span>
             </div>
           </div>
           <div class="about__bar__item">
             <p>Delicious</p>
             <div id="bar2" class="barfiller">
               <div class="tipWrap"><span class="tip"></span></div>
-              <span class="fill" data-percentage="99"></span>
+              <span class="fill" data-percentage="99.9"></span>
             </div>
           </div>
           <div class="about__bar__item">
             <p>Lovely</p>
             <div id="bar3" class="barfiller">
               <div class="tipWrap"><span class="tip"></span></div>
-              <span class="fill" data-percentage="99"></span>
+              <span class="fill" data-percentage="99.9"></span>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
 <!-- About Section End -->
 
 <!-- Categories Section Begin -->
-<div class="categories">
+{% comment %} <div class="categories">
   <div class="container">
     <div class="row">
       <div class="categories__slider owl-carousel">
@@ -123,172 +123,38 @@
       </div>
     </div>
   </div>
-</div>
+</div> {% endcomment %}
 <!-- Categories Section End -->
 
 <!-- Product Section Begin -->
 <section class="product spad">
   <div class="container">
     <div class="row">
+      {% for product in products %}
       <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-1.jpg"
-          >
+          <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
             <div class="product__label">
-              <span>Cupcake</span>
+              <span>{{ product.category }}</span>
             </div>
           </div>
           <div class="product__item__text">
-            <h6><a href="#">Dozen Cupcakes</a></h6>
-            <div class="product__item__price">$32.00</div>
+            <h6><a href="#">{{ product.name }}</a></h6>
+            <div class="product__item__price">₹{{ product.price }}</div>
             <div class="cart_add">
-              <a href="#">Add to cart</a>
+              <a href="{% url 'cart:cart' %}">Add to Cart</a>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-2.jpg"
-          >
-            <div class="product__label">
-              <span>Cupcake</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">Cookies and Cream</a></h6>
-            <div class="product__item__price">$30.00</div>
-            <div class="cart_add">
-              <a href="#">Add to cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-3.jpg"
-          >
-            <div class="product__label">
-              <span>Cupcake</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">Gluten Free Mini Dozen</a></h6>
-            <div class="product__item__price">$31.00</div>
-            <div class="cart_add">
-              <a href="#">Add to cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-4.jpg"
-          >
-            <div class="product__label">
-              <span>Cupcake</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">Cookie Dough</a></h6>
-            <div class="product__item__price">$25.00</div>
-            <div class="cart_add">
-              <a href="#">Add to cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-5.jpg"
-          >
-            <div class="product__label">
-              <span>Cupcake</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">Vanilla Salted Caramel</a></h6>
-            <div class="product__item__price">$05.00</div>
-            <div class="cart_add">
-              <a href="#">Add to cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-6.jpg"
-          >
-            <div class="product__label">
-              <span>Cupcake</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">German Chocolate</a></h6>
-            <div class="product__item__price">$14.00</div>
-            <div class="cart_add">
-              <a href="#">Add to cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-7.jpg"
-          >
-            <div class="product__label">
-              <span>Cupcake</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">Dulce De Leche</a></h6>
-            <div class="product__item__price">$32.00</div>
-            <div class="cart_add">
-              <a href="#">Add to cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div
-            class="product__item__pic set-bg"
-            data-setbg="/static/img/shop/product-8.jpg"
-          >
-            <div class="product__label">
-              <span>Cupcake</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">Mississippi Mud</a></h6>
-            <div class="product__item__price">$08.00</div>
-            <div class="cart_add">
-              <a href="#">Add to cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
 <!-- Product Section End -->
 
 <!-- Class Section Begin -->
-<section class="class spad">
+{% comment %} <section class="class spad">
   <div class="container">
     <div class="row">
       <div class="col-lg-6">
@@ -319,11 +185,11 @@
       ></a>
     </div>
   </div>
-</section>
+</section> {% endcomment %}
 <!-- Class Section End -->
 
 <!-- Team Section Begin -->
-<section class="team spad">
+{% comment %} <section class="team spad">
   <div class="container">
     <div class="row">
       <div class="col-lg-7 col-md-7 col-sm-7">
@@ -397,7 +263,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> {% endcomment %}
 <!-- Team Section End -->
 
 <!-- Testimonial Section Begin -->
@@ -570,7 +436,7 @@
 <!-- Testimonial Section End -->
 
 <!-- Instagram Section Begin -->
-<section class="instagram spad">
+{% comment %} <section class="instagram spad">
   <div class="container">
     <div class="row">
       <div class="col-lg-4 p-0">
@@ -618,7 +484,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> {% endcomment %}
 <!-- Instagram Section End -->
 
 <!-- Map Begin -->
@@ -626,20 +492,20 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-4 col-md-7">
-        <div class="map__inner">
-          <h6>COlorado</h6>
+        {% comment %} <div class="map__inner">
+          <h6>COloradoM</h6>
           <ul>
             <li>1000 Lakepoint Dr, Frisco, CO 80443, USA</li>
             <li>Sweetcake@support.com</li>
             <li>+1 800-786-1000</li>
           </ul>
-        </div>
+        </div> {% endcomment %}
       </div>
     </div>
   </div>
   <div class="map__iframe">
     <iframe
-      src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d10784.188505644011!2d19.053119335158936!3d47.48899529453826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1543907528304"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3914.722584080144!2d75.89266047481041!3d11.13402668903732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba651d12ad11f7d%3A0xcdc1f327bd56c1a3!2sUniversity%20of%20Calicut!5e0!3m2!1sen!2sin!4v1742233458047!5m2!1sen!2sin"
       height="300"
       style="border: 0"
       allowfullscreen=""

@@ -1,48 +1,36 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Signup</title>
-    <link rel="stylesheet" href="static/css/login.css">
-</head>
-<body>
-
+{% block title %}Login{% endblock title %}
+{% block content %}
+ <section class="login spad">
     <div class="container">
-        <div class="form-box">
-            <div class="button-box">
-                <button type="button" class="toggle-btn" onclick="showLogin()">Login</button>
-                <button type="button" class="toggle-btn" onclick="showSignup()">Signup</button>
-            </div>
-
-            <!-- LOGIN FORM -->
-            <form method="post" action="{% url 'user_login' %}" id="login-form" class="input-group">
-                <input type="text" name="username" class="input-field" placeholder="Username" required>
-                <input type="password" name="password" class="input-field" placeholder="Password" required>
-                <button type="submit" class="submit-btn">Login</button>
-            </form>
-
-            <!-- SIGNUP FORM -->
-            <form id="signup-form" class="input-group" method="post" action="{% url 'signup' %}">
-                <input type="text" name="username" class="input-field" placeholder="userName" required>
-                <input type="email" name="email" class="input-field" placeholder="Email Address" required>
-                
-                
-                <select name="role" class="input-field" required>
-                    <option value="" disabled selected>Select Role</option>
-                    <option value="student">Student</option>
-                    <option value="faculty">Faculty</option>
-                </select>
-
-                <input type="password" name="password" class="input-field" placeholder="Password" required>
-                <input type="password" name="confirm_password" class="input-field" placeholder="Confirm Password" required>
-                <button type="submit" class="submit-btn">Signup</button>
+        <div class="login__form">
+            <form action="{% url 'user_login' %}" method="POST">
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <h6 class="login__title text-center">Login</h6>
+                        <div class="login__input mb-3">
+                            <label>Username:</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="login__input mb-3">
+                            <label>Password:</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="site-btn w-100">LOGIN</button>
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+                            <!-- Forgot Password (Uncomment if needed) -->
+                            {# <p><a href="{% url 'password_reset' %}">Forgot Password?</a></p> #}
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
+</section>
 
-    <script src="static/js/login.js"></script>
+    <!-- Checkout Section End -->
 
-</body>
-</html>
+{% endblock %}

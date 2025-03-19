@@ -1,0 +1,129 @@
+{% extends "base.html" %} 
+{% block content %}
+
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__text">
+                    <h2>Shopping Cart</h2>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__links">
+                    <a href="{% url 'index' %}">Home</a>
+                    <span>Shopping Cart</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="shopping__cart__table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td class="product__cart__item">
+                                <div class="product__cart__item__pic">
+                                    <img src="{{ item.image_url }}" alt="{{ item.name }}" width="80">
+                                </div>
+                                <div class="product__cart__item__text">
+                                    <h6>{{ item.name }}</h6>
+                                    <h5>${{ item.price|floatformat:2 }}</h5>
+                                </div>
+                            </td>
+                            
+                            <!-- Update Cart Quantity -->
+                            <td class="quantity__item">
+                                <form method="post" action="{% url 'cart:update' item.id %}">
+                                    {% csrf_token %}
+                                    <div class="quantity">
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 50px;">
+                                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                    </div>
+                                    
+                                </form>
+                            </td>
+                            
+                            <td class="cart__price">
+                                ${{ item.subtotal|floatformat:2 }}</b>
+                            </td>
+                            
+                            <!-- Remove Item from Cart -->
+                            <td class="cart__close">
+                                <a href="{% url 'cart:delete' item.id %}" class="btn btn-sm btn-danger">Remove</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">Your cart is empty.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% if messages %}
+                      <div class="alert alert-warning">
+                        {% for message in messages %}
+                             <p>{{ message }}</p>                   
+                         {% endfor %}                   
+                      </div>                  
+                    {% endif %}                                   
+                  
+                </table>
+            </div>
+            <div class="row mt-4">
+                <div class="col-lg-6">
+                    <div class="continue__btn">
+                        <a href="{% url 'shop' %}">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="cart__discount">
+                <h6>Discount Codes</h6>
+                            {% comment %} {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert {{ message.tags }}">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %} {% endcomment %}
+                        <form action="{% url 'cart:apply_coupon' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="coupon_code" placeholder="Coupon code">
+                            <button type="submit">Apply</button>
+                        </form>
+                    </div>
+                    <div class="cart__total">
+                        <h6>Cart total</h6>
+                        <ul>
+                            <li>Subtotal: <span>$ {{ total_cart_price|floatformat:2 }}</span></li>
+                                {% if discount_amount and discount_amount > 0 %}
+                                    <li>Discount: <span>- $ {{ discount_amount|floatformat:2 }}</span></li>
+                                {% endif %}
+                                <li>Total: <span>$ {{ final_total|floatformat:2 }}</span></li>
+
+                        </ul>
+                        <a href="{% url 'checkout' %}" class="primary-btn">See your orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+             
+{% endblock content %}

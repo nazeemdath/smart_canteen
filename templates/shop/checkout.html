@@ -1,0 +1,41 @@
+{% extends "base.html" %} 
+{% block content %}
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            {% comment %} <form action="{% url 'initiate_payment' %}" method="POST"> {% endcomment %}
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <div class="checkout__order">
+                            <h6 class="order__title">Your Order Summary</h6>
+                            <div class="checkout__order__products">Product <span>Total</span></div>
+                            <ul class="checkout__total__products">
+                                {% for item in cart_items %}
+                                    <li><samp>{{ forloop.counter }}.</samp> {{ item.name }} <span>₹{{ item.total_price }}</span></li>
+                                {% endfor %}
+                            </ul>
+                            <ul class="checkout__total__all">
+                                <li>Subtotal <span>₹{{ total_cart_price|floatformat:2 }}</span></li>
+                                {% if discount_amount and discount_amount > 0 %}
+                                    <li>Discount <span>- ₹{{ discount_amount|floatformat:2 }}</span></li>
+                                {% endif %}
+                                <li>Total <span>₹{{ final_total|floatformat:2 }}</span></li>
+                            </ul>
+                            <input type="hidden" name="total_price" value="{{ final_total }}">
+                            <input type="hidden" name="discount" value="{{ discount_amount|default:0 }}">
+                            <form action="{% url 'initiate_payment' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="total_cart_price" value="{{ final_total }}">
+                                <button type="submit" class="site-btn">Proceed to Payment</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->
+{%endblock content%}
