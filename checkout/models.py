@@ -9,6 +9,7 @@ class Order(models.Model):
         ("Paid", "Paid"),
         ("Processing", "Processing"),
         ("Delivered", "Delivered"),
+        ("ready", "Ready for Pickup"),
         ("Cancelled", "Cancelled"),
     ]
 
@@ -41,4 +42,23 @@ class Order(models.Model):
                 fail_silently=True,
             )
 
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)  
+
+class Feedback(models.Model):
+    order = models.OneToOneField(
+        'Order', on_delete=models.CASCADE, null=True, blank=True
+    )  # ✅ Allow feedback without an order
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(
+        choices=[(i, i) for i in range(1, 6)]
+    )  # ✅ Using PositiveSmallIntegerField (saves space)
+    comment = models.TextField(blank=True, null=True)  # ✅ Comment is optional
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Feedback"
+        verbose_name_plural = "Feedbacks"  # ✅ Corrects the admin display
+
+    def __str__(self):
+        return f"Feedback from {self.user.username} for Order {self.order.id if self.order else 'N/A'}"
+

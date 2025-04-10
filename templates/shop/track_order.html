@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Track Order - {{ order.id }}</h2>
+    <p><strong>Status:</strong> <span id="order-status">{{ order.status }}</span></p>
+
+    <div class="progress" style="height: 25px;">
+        <div id="order-progress" class="progress-bar" role="progressbar" 
+            style="width: 0%;" 
+            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+
+    <p>Order placed on: {{ order.created_at }}</p>
+    <a href="{% url 'profile' %}" class="btn btn-secondary">Back to Profile</a>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let orderStatus = "{{ order.status|lower }}"; // Ensure status is lowercase for matching
+
+        // Debugging: Print status to console (Check this in the browser's DevTools)
+        console.log("Order Status:", orderStatus);
+
+        // Define status milestones and corresponding progress %
+        let statusProgress = {
+            "pending": { "percentage": 25, "color": "#ffc107", "text": "Pending" },  
+            "preparing": { "percentage": 50, "color": "#17a2b8", "text": "Preparing" }, 
+            "ready": { "percentage": 75, "color": "#007bff", "text": "Order Ready" }, 
+            "delivered": { "percentage": 100, "color": "#28a745", "text": "Delivered" } 
+        };
+
+        // Check if status exists in our dictionary
+        if (statusProgress.hasOwnProperty(orderStatus)) {
+            let progressData = statusProgress[orderStatus];
+
+            // Update the progress bar
+            let progressBar = document.getElementById("order-progress");
+            progressBar.style.width = progressData.percentage + "%";
+            progressBar.style.backgroundColor = progressData.color;
+            progressBar.innerHTML = progressData.text;
+
+            // Update status text
+            document.getElementById("order-status").innerText = progressData.text;
+        } else {
+            console.error("Unknown status:", orderStatus);
+        }
+    });
+</script>
+
+{% endblock %}

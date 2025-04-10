@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Health Dashboard{% endblock %}
+<link rel="stylesheet" href="{% static 'css/health_dashboard.css' %}">
+{% block content %}
+<div class="health-dashboard-container">
+  <h2>🩺 Weekly Calorie Intake</h2>
+  <h3>📅 Daily Calorie Summary</h3>
+  
+  <table class="health-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Total Calories</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in daily_calories %}
+        <tr>
+          <td>{{ item.order_date }}</td>
+          <td>{{ item.total_calories }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

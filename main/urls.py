@@ -8,4 +8,9 @@ urlpatterns=[
     path('base', views.about),
     path('shop', views.shop,name='shop' ),
     path('',views.index, name='index'),
+    path("search/", views.search_products, name="search_products"),
+    path('subscription_plans/', views.subscription_plans, name='subscription_plans'),
+    path('subscription_success/', views.subscription_success, name='subscription_success'),
+    path("claim-meal/<int:meal_id>/", views.claim_meal, name="claim_meal"),
+    path("health/", views.health_dashboard, name="health_dashboard")
 ]

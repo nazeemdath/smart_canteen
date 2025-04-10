@@ -336,10 +336,10 @@ ol {
 }
 .header__top__left ul li a {
   font-size: 14px;
-  color: #f5f0f0;
+  color: #111010;
   list-style: none;
   display: inline-block;
-  margin-right: 30px;
+  margin-right: -3px;
   position: relative;
   padding: 2px 0;
   cursor: pointer;
@@ -350,7 +350,7 @@ ol {
   visibility: visible;
 }
 .header__top__left ul li ul {
-  background: #111111;
+  background: #f5f2f2;
   display: inline-block;
   padding: 2px 0;
   position: absolute;
@@ -366,7 +366,7 @@ ol {
 .header__top__left ul li ul li {
   list-style: none;
   font-size: 13px;
-  color: #ffffff;
+  color: #0b0a0a;
   padding: 2px 15px;
   cursor: pointer;
 }
@@ -378,7 +378,7 @@ ol {
   right: -19px;
   top: 1px;
   content: "|";
-  color: #bbbbbb;
+  color: #0d0b0b;
 }
 .header__top__left ul li:last-child {
   margin-right: 0;
@@ -466,10 +466,10 @@ ol {
   margin-right: -5px;
 }
 .header__menu ul li.active a {
-  background: #111111;
+  background: #f08632;
 }
 .header__menu ul li:hover a {
-  background: #111111;
+  background: #0b0b0b;
 }
 .header__menu ul li:hover .dropdown {
   top: 62px;
@@ -560,16 +560,14 @@ ol {
 }
 .hero__text h2 {
   font-size: 46px;
-  color: #111111;
+  color: #121111;
   line-height: 60px;
   font-weight: 700;
   margin-bottom: 18px;
   position: relative;
-  top: 100px;
-  opacity: 0;
-  -webkit-transition: all, 0.3s;
-  -o-transition: all, 0.3s;
-  transition: all, 0.3s;
+  top: 0;  /* Keep it at normal position */
+  opacity: 1;  /* Make it visible */
+  transition: all 0.3s ease-in-out;
 }
 .hero__text .primary-btn {
   position: relative;
@@ -1091,7 +1089,7 @@ ol {
   font-weight: 600;
   text-transform: uppercase;
 }
-.product__item__text .product__item__price {
+.product__item__text .product__item__price  {
   color: #111111;
   font-weight: 600;
   font-size: 16px;
@@ -1099,7 +1097,7 @@ ol {
   -o-transition: all, 0.3s;
   transition: all, 0.3s;
 }
-.product__item__text .cart_add {
+.product__item__text .cart_add  {
   position: absolute;
   left: 0;
   bottom: -20px;
@@ -1117,6 +1115,22 @@ ol {
   display: inline-block;
   border-bottom: 2px solid #f08632;
   padding-bottom: 4px;
+}
+.product__item:hover .calories {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.product__item .calories {
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+.product__item:hover .cart_add {
+  opacity: 1;
+  visibility: visible;
+  bottom: 5px;
 }
 
 /*---------------------
@@ -4030,6 +4044,328 @@ ol {
   .checkout__order__products span {
     display: none;
   }
+
 }
 
+/* Subscription Plans Page */
+.subscription-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.subscription-container h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.subscription-list {
+  list-style: none;
+  padding: 0;
+}
+
+.subscription-item {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.subscription-item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.subscription-item input[type="radio"] {
+  margin-right: 10px;
+}
+
+.plan-description {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+  padding-left: 25px;
+}
+
+/* Subscribe Button */
+button {
+  background: #28a745;
+  color: white;
+  font-size: 18px;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #218838;
+}
+
+
+/* Subscription Payment Page Styles */
+.subscription-payment-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.subscription-payment-container h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.subscription-payment-container p {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.subscription-payment-container strong {
+  color: #222;
+}
+
+#razorpay-form {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.razorpay-payment-button {
+  background: #F37254;
+  color: white;
+  font-size: 18px;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.razorpay-payment-button:hover {
+  background: #d85c43;
+}
+
+/* Success Message */
+.messages {
+  margin-top: 20px;
+  padding: 0;
+}
+
+.messages li {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.messages .success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.messages .error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* static/css/health_dashboard.css */
+
+.health-dashboard-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.health-dashboard-container h2 {
+  text-align: center;
+  color: #198754;
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.health-dashboard-container h3 {
+  text-align: center;
+  color: #555;
+  margin-bottom: 30px;
+  font-weight: normal;
+  font-size: 20px;
+}
+
+.health-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.health-table thead {
+  background-color: #198754;
+  color: white;
+}
+
+.health-table th, .health-table td {
+  padding: 16px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.health-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.health-table tbody tr:hover {
+  background-color: #e8ffe8;
+  transition: background-color 0.3s ease;
+}
+
+
+/* static/css/order_confirmation.css */
+
+.order-confirmation-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: slideFade 0.6s ease;
+}
+
+.order-confirmation-container h2 {
+  color: #198754;
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.order-confirmation-container p {
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.order-confirmation-container h3 {
+  font-size: 20px;
+  color: #333;
+}
+
+.token-number {
+  font-weight: bold;
+  font-size: 28px;
+  color: #e74c3c;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+@keyframes slideFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* static/css/feedback.css */
+
+.feedback-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 40px;
+  background-color: #fefefe;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: fadeInUp 0.6s ease;
+}
+
+.feedback-container h2 {
+  font-size: 26px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.feedback-form p {
+  margin-bottom: 18px;
+}
+
+.feedback-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.feedback-form input[type="text"],
+.feedback-form textarea,
+.feedback-form select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fafafa;
+  transition: 0.3s ease;
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus,
+.feedback-form select:focus {
+  border-color: #198754;
+  outline: none;
+  background-color: #fff;
+}
+
+.submit-btn {
+  background-color: #198754;
+  color: #fff;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #157347;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 

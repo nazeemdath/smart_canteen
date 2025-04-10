@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Subscription Payment{% endblock %}
+
+{% block content %}
+<div class="subscription-payment-container">
+    <h2>Complete Your Subscription Payment</h2>
+
+    <p>Plan: <strong>{{ plan.get_name_display }}</strong></p>
+    <p>Amount: <strong>₹{{ plan.price }}</strong></p>
+
+    <!-- Razorpay Button (Invisible Form) -->
+    <form id="razorpay-form">
+        <button id="pay-btn" style="display: none;">Pay Now</button>
+    </form>
+
+    <!-- Hidden Success Form (Sends Data to Django Backend) -->
+    <form id="success-form" method="POST" action="{% url 'subscription_success' %}">
+        {% csrf_token %}
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+        <input type="hidden" name="plan_id" value="{{ plan.id }}">
+    </form>
+</div>
+
+<!-- Razorpay Payment Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ order_amount }}", 
+        "currency": "INR",
+        "order_id": "{{ razorpay_order_id }}",
+        "name": "Canteen Subscription",
+        "description": "Meal Subscription Plan",
+        "image": "https://yourwebsite.com/logo.png",
+        "prefill": {
+            "name": "{{ user.username }}",
+            "email": "{{ user.email }}"
+        },
+        "theme": {
+            "color": "#F37254"
+        },
+        "handler": function(response) {
+            console.log("Payment Successful!", response);
+            
+            // Fill hidden form with payment details
+            document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
+            document.getElementById("razorpay_order_id").value = response.razorpay_order_id;
+            document.getElementById("razorpay_signature").value = response.razorpay_signature;
+
+            // Submit success form to Django backend
+            document.getElementById("success-form").submit();
+        },
+        "modal": {
+            "ondismiss": function() {
+                console.log("Payment popup closed by user.");
+            }
+        }
+    };
+
+    var rzp = new Razorpay(options);
+    
+    // Automatically open Razorpay checkout when the page loads
+    document.addEventListener("DOMContentLoaded", function() {
+        rzp.open();
+    });
+
+    // Prevent default form submission
+    document.getElementById("razorpay-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+    });
+</script>
+
+{% endblock %}

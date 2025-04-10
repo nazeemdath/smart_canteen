@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Meal Subscription Plans{% endblock %}
+
+{% block content %}
+<div class="subscription-container">
+    {% if active_subscription %}
+        <p>You have an active subscription: <strong>{{ active_subscription.plan.get_name_display }}</strong> 
+           (Expires on: {{ active_subscription.end_date }})</p>
+        <p><strong>Meals Per Day:</strong> {{ active_subscription.plan.meals_per_day }}</p>
+        <p><strong>Remaining Meals Today:</strong> {{ remaining_meals }}</p>
+
+        <!-- User's Claimable Meals -->
+        <h3>Your Claimable Meals</h3>   
+        {% if user_available_meals %}
+            <ul>
+                {% for meal in user_available_meals %}
+                    <li>
+                        {{ meal.product }}
+                        <form method="POST" action="{% url 'claim_meal' meal.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Claim</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no meals left to claim today.</p>
+        {% endif %}
+    {% else %}
+        <form method="POST" action="">
+            {% csrf_token %}
+            <ul class="subscription-list">
+                {% for plan in plans %}
+                    <li class="subscription-item">
+                        <label>
+                            <input type="radio" name="plan_id" value="{{ plan.id }}" required>
+                            <strong>{{ plan.get_name_display }}</strong> - ₹{{ plan.price }} for {{ plan.duration_days }} days
+                        </label>
+                        <div class="plan-description">
+                            <p>{{ plan.description }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Subscribe Now</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock content %}

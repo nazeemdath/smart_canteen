@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block content %}
-
-<section class="hero">
+{%load static%}
+<section class="hero"> 
   <div class="hero__slider owl-carousel">
     <div class="hero__item set-bg" data-setbg="/static/img/hero/hero-4.jpg">
       <div class="container">
@@ -8,7 +8,7 @@
           <div class="col-lg-8">
             <div class="hero__text">
               <h2>WELCOME TO SMART CANTEEN!</h2>
-              {% comment %} <a href="#" class="primary-btn">menu</a> {% endcomment %}
+              <a href="{% url 'shop' %}" class="primary-btn">menu</a>
             </div>
           </div>
         </div>
@@ -20,7 +20,7 @@
           <div class="col-lg-8">
             <div class="hero__text">
               <h2>Making your life sweeter one bite at a time!</h2>
-              {% comment %} <a href="#" class="primary-btn">menu</a> {% endcomment %}
+              <a href="{% url 'shop' %}" class="primary-btn">menu</a>
             </div>
           </div>
         </div>
@@ -28,8 +28,7 @@
     </div>
   </div>
 </section>
-<!-- Hero Section End -->
-
+<!-- Hero Section End --> 
 <!-- About Section Begin -->
 <section class="about spad">
   <div class="container">
@@ -37,7 +36,7 @@
       <div class="col-lg-6 col-md-6">
         <div class="about__text">
           <div class="section-title">
-            <span>About Canteen</span>
+            <span>About Canteen</span>  
             <h2>Finger licki'n good!</h2>
           </div>
           <p>
@@ -268,172 +267,46 @@
 
 <!-- Testimonial Section Begin -->
 <section class="testimonial spad">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <div class="section-title">
-          <span>Testimonial</span>
-          <h2>Our client say</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="section-title">
+                    <span>Testimonial</span>
+                    <h2>Our Clients Say</h2>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="row">
+            <div class="testimonial__slider owl-carousel">
+                {% for feedback in feedbacks %}
+                <div class="col-lg-6">
+                    <div class="testimonial__item">
+                        <div class="testimonial__author">
+                            <div class="testimonial__author__pic">
+                                <img src="{% static 'img/testimonial/default.jpg' %}" alt="">
+                            </div>
+                            <div class="testimonial__author__text">
+                                <h5>{{ feedback.user.username }}</h5>
+                                <span>Submitted on {{ feedback.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            {% for _ in "12345"|slice:feedback.rating %}
+                                <span class="icon_star"></span>
+                            {% endfor %}
+                        </div>
+                        <p>{{ feedback.comment }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No feedback available yet.</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <div class="row">
-      <div class="testimonial__slider owl-carousel">
-        <div class="col-lg-6">
-          <div class="testimonial__item">
-            <div class="testimonial__author">
-              <div class="testimonial__author__pic">
-                <img src="/static/img/testimonial/ta-1.jpg" alt="" />
-              </div>
-              <div class="testimonial__author__text">
-                <h5>Kerry D.Silva</h5>
-                <span>New york</span>
-              </div>
-            </div>
-            <div class="rating">
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star-half_alt"></span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua viverra
-              lacus vel facilisis.
-            </p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="testimonial__item">
-            <div class="testimonial__author">
-              <div class="testimonial__author__pic">
-                <img src="/static/img/testimonial/ta-2.jpg" alt="" />
-              </div>
-              <div class="testimonial__author__text">
-                <h5>Kerry D.Silva</h5>
-                <span>New york</span>
-              </div>
-            </div>
-            <div class="rating">
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star-half_alt"></span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua viverra
-              lacus vel facilisis.
-            </p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="testimonial__item">
-            <div class="testimonial__author">
-              <div class="testimonial__author__pic">
-                <img src="/static/img/testimonial/ta-1.jpg" alt="" />
-              </div>
-              <div class="testimonial__author__text">
-                <h5>Ophelia Nunez</h5>
-                <span>London</span>
-              </div>
-            </div>
-            <div class="rating">
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star-half_alt"></span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua viverra
-              lacus vel facilisis.
-            </p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="testimonial__item">
-            <div class="testimonial__author">
-              <div class="testimonial__author__pic">
-                <img src="/static/img/testimonial/ta-2.jpg" alt="" />
-              </div>
-              <div class="testimonial__author__text">
-                <h5>Kerry D.Silva</h5>
-                <span>New york</span>
-              </div>
-            </div>
-            <div class="rating">
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star-half_alt"></span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua viverra
-              lacus vel facilisis.
-            </p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="testimonial__item">
-            <div class="testimonial__author">
-              <div class="testimonial__author__pic">
-                <img src="/static/img/testimonial/ta-1.jpg" alt="" />
-              </div>
-              <div class="testimonial__author__text">
-                <h5>Ophelia Nunez</h5>
-                <span>London</span>
-              </div>
-            </div>
-            <div class="rating">
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star-half_alt"></span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua viverra
-              lacus vel facilisis.
-            </p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="testimonial__item">
-            <div class="testimonial__author">
-              <div class="testimonial__author__pic">
-                <img src="/static/img/testimonial/ta-2.jpg" alt="" />
-              </div>
-              <div class="testimonial__author__text">
-                <h5>Kerry D.Silva</h5>
-                <span>New york</span>
-              </div>
-            </div>
-            <div class="rating">
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star"></span>
-              <span class="icon_star-half_alt"></span>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua viverra
-              lacus vel facilisis.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
-<!-- Testimonial Section End -->
+
+
 
 <!-- Instagram Section Begin -->
 {% comment %} <section class="instagram spad">
@@ -517,3 +390,4 @@
 <!-- Map End -->
 
 {% endblock content %}
+

@@ -3,35 +3,75 @@ from cart.models import CartItem
 import razorpay
 from django.conf import settings
 from .models import Order
-from cart.models import CartItem
+from cart.models import CartItem,Coupon
 from main.models import Product
 from django.http import JsonResponse
 import json
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django import forms
+from .models import Feedback
+from decimal import Decimal  
 
 
 def checkout(request):
-    cart_items = CartItem.objects.filter(user=request.user)
+    cart_items = CartItem.objects.filter(user=request.user, order__isnull=True)
+    # ✅ If cart is empty, return zero values
+    if not cart_items.exists():
+        request.session.pop("discount_amount", None)
+        request.session.pop("coupon_code", None)
+        request.session.pop("final_total", None)
+        request.session.modified = True  
+        return render(request, "shop/checkout.html", {"cart_items": [], "total_cart_price": 0, "discount_amount": 0, "final_total": 0})
 
-    # Ensure total_price is calculated correctly
-   # Ensure 'total_price' is correctly fetched
-    total_cart_price = sum(item.total_price for item in cart_items if isinstance(item.total_price, (int, float)))
-    print("Total Cart Price:", total_cart_price)
-    # Ensure discount_amount is a number
-    discount_amount = request.session.get("discount_amount", 0) or 0
+    # ✅ Calculate subtotal per item
+    for item in cart_items:
+        item.subtotal = Decimal(item.price) * item.quantity  
 
-    # Ensure final_total is not negative
-    final_total = max(total_cart_price - discount_amount, 0)
+    # ✅ Calculate total cart price (before discount)
+    total_cart_price = sum(item.subtotal for item in cart_items)  
+
+    # ✅ Retrieve discount details
+    discount_amount = Decimal(request.session.get("discount_amount", 0))
+    applied_coupon = request.session.get("coupon_code")
+
+    # ✅ Initialize discount calculation
+    total_discount = Decimal(0)
+
+    if applied_coupon:
+        try:
+            coupon = Coupon.objects.get(code=applied_coupon)
+            for item in cart_items:
+                if item.product_id in coupon.products.all():
+                    # ✅ Apply discount proportionally based on quantity
+                    item_discount = (item.subtotal * Decimal(coupon.discount_percentage)) / Decimal(100)
+                    item.discounted_price = max(item.subtotal - item_discount, Decimal(0))
+                    total_discount += item_discount  
+                else:
+                    item.discounted_price = item.subtotal  
+
+        except Coupon.DoesNotExist:
+            request.session.pop("discount_amount", None)
+            request.session.pop("coupon_code", None)
+            discount_amount = Decimal(0)
+
+    total_discount = min(total_discount, total_cart_price)
+    final_total = max(total_cart_price - total_discount, Decimal(0))
+
+    request.session["discount_amount"] = float(total_discount)  
+    request.session["final_total"] = float(final_total)
+    request.session.modified = True  
 
     context = {
-        "cart_items": list(cart_items),  # Convert QuerySet to a list
+        "cart_items": cart_items,
         "total_cart_price": total_cart_price,
-        "discount_amount": discount_amount,
+        "discount_amount": total_discount,
         "final_total": final_total,
     }
+
     return render(request, "shop/checkout.html", context)
+
 
 
 @login_required
@@ -80,22 +120,6 @@ def initiate_payment(request):
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
-# def payment_success(request):
-#     if request.method == "POST":
-#         data = json.loads(request.body)
-#         order_id = data.get("order_id")
-#         payment_id = data.get("payment_id")
-
-#         try:
-#             order = Order.objects.get(razorpay_order_id=order_id)
-#             order.razorpay_payment_id = payment_id
-#             order.status = "Paid"
-#             order.save()
-
-#             return JsonResponse({"message": "Payment successful"})
-#         except Order.DoesNotExist:
-#             return JsonResponse({"error": "Order not found"}, status=400)
-#     return JsonResponse({"error": "Invalid request"}, status=400)
 
 @csrf_exempt  # 🚨 Use only for webhook security checks (Ensure additional security)
 def payment_success(request):
@@ -120,7 +144,7 @@ def payment_success(request):
 
         # ✅ Fetch and update the order
         order = get_object_or_404(Order, razorpay_order_id=order_id)
-        order.status = "Completed"
+        order.status = "paid"
         order.razorpay_payment_id = payment_id
         order.save()
 
@@ -131,12 +155,24 @@ def payment_success(request):
             if product.stock >= item.quantity:
                 product.stock -= item.quantity  # Reduce stock
                 product.save()
+            item.order = order  # ✅ Link cart item to this order
+            item.save()
 
+            
         # ✅ Clear the user's cart
-        cart_items.delete()
+        # cart_items.delete()
+     # ✅ Clear the coupon discount session data
+        request.session.pop("discount_amount", None)
+        request.session.pop("coupon_code", None)
+        request.session.pop("final_total", None)
+        request.session.modified = True  # Ensure session updates
 
         # ✅ Generate a token
         token = f"ORD{order.id}{order.user.id:04d}"
+        print(order.id)  # 101
+        print(order.user.id)  # 7
+        request.session["order_token"] = token
+        
 
         # ✅ Send an email confirmation
         send_mail(
@@ -147,11 +183,49 @@ def payment_success(request):
             fail_silently=True,
         )
 
-        return JsonResponse({"success": True, "message": "Payment successful!", "token": token})
+        return JsonResponse({"success": True, "message": "Payment successful!",})
 
     except Exception as e:
         print("Payment verification error:", e)
         return JsonResponse({"error": "Internal server error"}, status=500)
 
 def order_confirmation(request):
-    return render(request, "shop/order_confirmation.html")
+    token = request.session.get("order_token", "N/A")  # Retrieve token     
+    return render(request, "shop/order_confirmation.html",{"order_token": token})
+
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['rating', 'comment']
+
+
+
+@login_required
+def submit_feedback(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    # Check if feedback already exists for this order
+    if Feedback.objects.filter(order=order).exists():
+        return redirect("profile")  # Redirect if feedback already submitted
+
+    if request.method == "POST":
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.user = request.user
+            feedback.order = order
+            feedback.save()
+            return redirect("profile")  # Redirect after successful submission
+    else:
+        form = FeedbackForm()
+
+    return render(request, "shop/feedback_form.html", {"form": form, "order": order})
+
+
+
+def testimonials(request):
+    feedbacks = list(Feedback.objects.all())  # Convert QuerySet to a list
+    print("Feedbacks:", feedbacks)  # Debugging
+    return render(request, "index.html", {"feedbacks": feedbacks})
+

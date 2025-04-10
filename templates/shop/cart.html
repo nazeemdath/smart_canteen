@@ -110,17 +110,24 @@
                         </form>
                     </div>
                     <div class="cart__total">
-                        <h6>Cart total</h6>
+                        <h6>Cart Total</h6>
                         <ul>
                             <li>Subtotal: <span>$ {{ total_cart_price|floatformat:2 }}</span></li>
-                                {% if discount_amount and discount_amount > 0 %}
-                                    <li>Discount: <span>- $ {{ discount_amount|floatformat:2 }}</span></li>
-                                {% endif %}
-                                <li>Total: <span>$ {{ final_total|floatformat:2 }}</span></li>
 
+                            {% for item in cart_items %}
+                                {% if item.subtotal > item.discounted_price %}
+                                    <li>Discount on <strong>{{ item.name }}</strong>: 
+                                        <span>- $ {{ item.subtotal|floatformat:2 }} → $ {{ item.discounted_price|floatformat:2 }}</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            <li>Total: <span>$ {{ final_total|floatformat:2 }}</span></li>
                         </ul>
                         <a href="{% url 'checkout' %}" class="primary-btn">See your orders</a>
                     </div>
+
+
                 </div>
             </div>
         </div>

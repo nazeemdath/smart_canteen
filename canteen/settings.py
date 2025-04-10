@@ -68,7 +68,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.cart'
+                'cart.context_processors.cart',
+                "cart.context_processors.cart_count",
             ],
         },
     },
@@ -142,5 +143,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Session persists after closing the br
 
 LOGIN_URL = '/user_login/'  # Redirects unauthorized users to this page
 
-RAZORPAY_KEY_ID = "rzp_test_rrvmcB0p6o5hqa"
-RAZORPAY_KEY_SECRET = "DU7J1EMlwCUGqpYQojx3F8Bq"
+RAZORPAY_KEY_ID = "rzp_test_SKA7pG9S47EI84"
+RAZORPAY_KEY_SECRET = "ATnSwK9297SQ9AyevVPxANWC"

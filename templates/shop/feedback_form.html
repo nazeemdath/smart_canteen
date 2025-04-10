@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+
+
+{% block content %}
+<div class="feedback-container">
+  <h2>📝 Submit Feedback for Order #{{ order.id }}</h2>
+
+  <form method="POST" class="feedback-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="submit-btn">Submit Feedback</button>
+  </form>
+</div>
+{% endblock %}

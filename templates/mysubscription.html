@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>My Subscription</h2>
+{% if user_subscription %}
+    <p>Plan: {{ user_subscription.plan.name }}</p>
+    <p>Valid Until: {{ user_subscription.end_date }}</p>
+    <p>Meals Per Day: {{ user_subscription.plan.meals_per_day }}</p>
+
+    <h3>Available Meals for Today</h3>
+    <ul>
+        {% for meal in available_meals %}
+            <li>
+                {{ meal.name }}  
+                {% if user_subscription.is_active %}
+                    <form method="POST" action="{% url 'claim_meal' meal.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Claim</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <p>No meals available for today.</p>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You do not have an active subscription.</p>
+{% endif %}
+{% endblock %}

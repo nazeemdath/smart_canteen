@@ -11,4 +11,5 @@ urlpatterns = [
     path('cart/delete/<int:item_id>/', views.delete, name='delete'),  # Ensure this matches the template
     path('cart/update/<int:item_id>/', views.update, name="update"),
     path('cart/apply_coupon/', views.apply_coupon, name="apply_coupon"),
+    path("track_order/<int:order_id>/", views.track_order, name="track_order"),
 ]

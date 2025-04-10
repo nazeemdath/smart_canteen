@@ -6,6 +6,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from cart.models import CartItem
+from checkout.models import Order
+
+
 
 @csrf_exempt
 def signup(request):
@@ -74,3 +77,29 @@ def main_page(request):
 def logout_view(request):
     logout(request)  # Logs out the user
     return redirect('/')  # Redirect to the homepage (or any other page)
+
+# @login_required
+# def profile(request):
+#     user = request.user
+#     active_orders = Order.objects.filter(user=user).exclude(status="delivered").order_by("-created_at")  # Only active orders 
+#     past_orders = Order.objects.filter(user=user, status="delivered").order_by("-created_at")  # Completed orders
+
+
+#     context = {
+#         "user": user,
+#         "active_orders": active_orders,
+#         "past_orders": past_orders,
+#     }
+#     return render(request, "profile.html", context)
+
+@login_required
+def profile(request):
+    user = request.user
+    last_five_orders = Order.objects.filter(user=user).order_by("-created_at")[:5]  # Get last 5 orders
+
+    context = {
+        "user": user,
+        "last_five_orders": last_five_orders,
+    }
+    return render(request, "profile.html", context)
+

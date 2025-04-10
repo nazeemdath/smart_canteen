@@ -13,7 +13,9 @@
                             <div class="checkout__order__products">Product <span>Total</span></div>
                             <ul class="checkout__total__products">
                                 {% for item in cart_items %}
-                                    <li><samp>{{ forloop.counter }}.</samp> {{ item.name }} <span>₹{{ item.total_price }}</span></li>
+                                    <li><samp>{{ forloop.counter }}.</samp> {{ item.name }} 
+                                        <span>₹{{ item.discounted_price|default:item.subtotal|floatformat:2 }}</span>
+                                    </li>
                                 {% endfor %}
                             </ul>
                             <ul class="checkout__total__all">
@@ -30,6 +32,7 @@
                                 <input type="hidden" name="total_cart_price" value="{{ final_total }}">
                                 <button type="submit" class="site-btn">Proceed to Payment</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
