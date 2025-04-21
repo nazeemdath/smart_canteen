@@ -8,7 +8,7 @@ from checkout.models import Order
 from decimal import Decimal
 
 
-
+@login_required
 def cart(request):
     # ✅ Only include items not linked to any order
     cart_items = CartItem.objects.filter(user=request.user, order__isnull=True)
@@ -119,7 +119,7 @@ def cartadd(request, product_id):
             image_url=product.image.url if product.image else "",
         )
 
-    messages.success(request, f"{product.name} added to cart!")
+    messages.success(request, f"{product.name} added to cart!",extra_tags="cart")
     return redirect('cart:cart')
 def delete(request, item_id):
     """

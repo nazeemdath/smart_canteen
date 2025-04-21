@@ -76,13 +76,15 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                    {% if messages %}
+                    {% comment %} {% if messages %}
                       <div class="alert alert-warning">
                         {% for message in messages %}
-                             <p>{{ message }}</p>                   
-                         {% endfor %}                   
+                          {% if 'cart' in message.tags %}
+                             <p>{{ message }}</p>  
+                          {% endif %}                 
+                        {% endfor %}                   
                       </div>                  
-                    {% endif %}                                   
+                    {% endif %}                                    {% endcomment %}
                   
                 </table>
             </div>

@@ -26,14 +26,14 @@
                 <div class="row">
                     <div class="col-lg-7 col-md-7">
                         <div class="shop__option__search">
-                            <form action="#">
-                                <select>
-                                    <option value="">Categories</option>
-                                    <option value="">Red Velvet</option>    
-                                    <option value="">Cup Cake</option>
-                                    <option value="">Biscuit</option>
-                                </select>
-                                <input type="text" id="search-input" placeholder="Search for products..." />
+                            <form method="GET" action="{% url 'shop' %}">
+                                {% comment %} <select name="category">
+                                    <option value="">All Categories</option>
+                                    <option value="Red Velvet">Red Velvet</option>    
+                                    <option value="Cup Cake">Cup Cake</option>
+                                    <option value="Biscuit">Biscuit</option>
+                                </select> {% endcomment %}
+                                <input type="text" name="q" id="search-input" placeholder="Search for products..." value="{{ request.GET.q }}">
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
@@ -53,49 +53,44 @@
                 </div>
             </div>
             <div class="row">
-                    {% for product in products %}
-                        <div class="col-lg-3 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
-                                    <div class="product__label">
-                                        <span>{{ product.category }}</span>
+                    {% if products %}
+                        {% for product in products %}
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
+                                        <div class="product__label">
+                                            <span>{{ product.category }}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">{{ product.name }}</a></h6>
-                                    <div class="product__item__price">₹{{ product.price }}</div>
-                                    <!-- ⭐ Show Star Rating -->
-                                    {% comment %} <div class="rating">
-                                        {% if product.avg_rating %}
-                                            {% for _ in ''|rjust:product.avg_rating|floatformat:0 %}
-                                                <span class="icon_star"></span>
-                                            {% endfor %}
-                                            <span>({{ product.avg_rating }}/5)</span>
+                                    <div class="product__item__text">
+                                        <h6><a href="#">{{ product.name }}</a></h6>
+                                        <div class="product__item__price">₹{{ product.price }}</div>
+                                        <div class="calories">
+                                            <p><strong>Calories:</strong> {{ product.calories }} kcal</p>
+                                        </div>
+                                        {% if product.stock > 0 %}
+                                            <div class="cart_add">
+                                                <a href="{% url 'cart:cartadd' product.id %}">Add to cart</a>
+                                            </div>
                                         {% else %}
-                                            <span>No ratings yet</span>
+                                            <div class="out_of_stock">
+                                                <span style="color: red; font-weight: bold;">Out of Stock</span>
+                                            </div>
                                         {% endif %}
-                                    </div> {% endcomment %}
-                                    <!-- ⭐ Calories Display -->
-                                    <div class="calories">
-                                     <p><strong>Calories:</strong> {{ product.calories }} kcal</p>
                                     </div>
-                                    {% if product.stock > 0 %}
-                                        <div class="cart_add">
-                                            <a href="{% url 'cart:cartadd' product.id %}">Add to cart</a>
-                                        </div>
-                                    {% else %}
-                                        <div class="out_of_stock">
-                                            <span style="color: red; font-weight: bold;">Out of Stock</span>
-                                        </div>
-                                    {% endif %}
-                                    
                                 </div>
                             </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12 text-center mt-5">
+                            <h4>No products found.</h4>
+                            <p>Try adjusting your search or filter criteria.</p>
                         </div>
-                    {% endfor %}
+                    {% endif %}
                 </div>
 
-            <div class="shop__last__option">
+
+            {% comment %} <div class="shop__last__option">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="shop__pagination">
@@ -111,7 +106,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> {% endcomment %}
         </div>
     </section>
     <!-- Shop Section End -->

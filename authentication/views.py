@@ -20,14 +20,23 @@ def signup(request):
         confirm_password = request.POST.get("confirm_password")  # ✅ FIXED field name
 
         # Check if passwords match
+        flag = False
+    
         if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect("signup")  # ✅ Redirect using URL name
+            messages.error(request, "Passwords do not match.", extra_tags="password_mismatch")
+            flag = True # ✅ Redirect using URL name
 
         # Check if username exists
         if CustomUser.objects.filter(username=username).exists():
-            messages.error(request, "Username already taken.")
-            return redirect("signup")
+            messages.error(request, "Username already taken.", extra_tags="username_taken")
+            flag = True
+        
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request, "email already taken.", extra_tags="email_taken")
+            flag = True
+        
+        if flag:
+            return redirect("signup")  # ✅ Redirect to signup page
 
         # Create user
         user = CustomUser.objects.create_user(username=username, email=email, password=password, role=role)
@@ -78,20 +87,7 @@ def logout_view(request):
     logout(request)  # Logs out the user
     return redirect('/')  # Redirect to the homepage (or any other page)
 
-# @login_required
-# def profile(request):
-#     user = request.user
-#     active_orders = Order.objects.filter(user=user).exclude(status="delivered").order_by("-created_at")  # Only active orders 
-#     past_orders = Order.objects.filter(user=user, status="delivered").order_by("-created_at")  # Completed orders
-
-
-#     context = {
-#         "user": user,
-#         "active_orders": active_orders,
-#         "past_orders": past_orders,
-#     }
-#     return render(request, "profile.html", context)
-
+    
 @login_required
 def profile(request):
     user = request.user

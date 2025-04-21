@@ -16,6 +16,10 @@ from django.db.models import Sum, F
 from django.db.models.functions import TruncDate
 from cart.models import  CartItem
 from collections import defaultdict
+from .models import WebPushSubscription
+import json
+
+
 
 
 # Initialize Razorpay Client using settings
@@ -28,10 +32,14 @@ def about(request):
     return render(request,'base.html')
 
 def shop(request):
+    query = request.GET.get('q')  # get the search keyword from the URL
     products = Product.objects.all()
-    cont = {'products':products}
-    return render(request,'shop/shop.html', cont)
 
+    if query:
+        products = products.filter(name__icontains=query)
+
+    context = {'products': products}
+    return render(request, 'shop/shop.html', context)
 
 def index(request):
     products = Product.objects.all()  # Fetch all products
@@ -232,7 +240,7 @@ from datetime import date
 def claim_meal(request, meal_id):
     user_subscription = UserSubscription.objects.filter(user=request.user, end_date__gte=date.today()).first()
     meal = get_object_or_404(SubscriptionMeal, id=meal_id, date_available=date.today(), is_available=True)
-
+   
     if not user_subscription:
         messages.error(request, "You do not have an active subscription.")
         return redirect("subscription_plans")
@@ -278,11 +286,17 @@ def claim_meal(request, meal_id):
         ClaimedMeal.objects.create(user_subscription=user_subscription, meal=meal)
 
         # Add an entry to the Order table (if applicable)
-        # Order.objects.create(
-        #     user=request.user,
-        #     meal=meal,
-        #     order_status="Claimed",
-        # )
+        order = Order.objects.create(
+            user=request.user,
+            status="Confirmed",
+            order_total=product.price # or the correct total based on the meal or cart
+        )
+            
+        # ✅ Generate a token
+        token = f"CLM{order.id}{order.user.id:04d}"
+        request.session["order_token"] = token
+        order.token_number = token  # ✅ Save it in the Order table
+        order.save()
 
         messages.success(request, f"You have successfully claimed {meal.product}. Remaining meals: {user_subscription.remaining_meals}")
 
@@ -297,7 +311,7 @@ def claim_meal(request, meal_id):
         #         fail_silently=True,
         #     )
 
-    return redirect("subscription_plans")
+    return redirect("order-confirmation")
 
 
 @login_required
@@ -346,3 +360,29 @@ def health_dashboard(request):
     return render(request, "health_dashboard.html", {
         "daily_calories": daily_calories
     })
+
+
+@csrf_exempt
+@login_required
+def save_subscription(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        
+
+        
+
+        subscription, created = WebPushSubscription.objects.get_or_create(
+            user=request.user,
+            endpoint=data['endpoint'],
+            defaults={
+                'p256dh': data['keys']['p256dh'],
+                'auth': data['keys']['auth'],
+            }
+        )
+
+        if not created:
+            subscription.p256dh = data['keys']['p256dh']
+            subscription.auth = data['keys']['auth']
+            subscription.save()
+
+        return JsonResponse({'status': 'ok'})

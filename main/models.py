@@ -5,6 +5,7 @@ from django.conf import settings
 from datetime import timedelta
 from django.utils.timezone import now
 from datetime import timedelta, date
+from authentication.models import CustomUser
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -97,5 +98,16 @@ class ClaimedMeal(models.Model):
     user_subscription = models.ForeignKey(UserSubscription, on_delete=models.CASCADE)
     meal = models.ForeignKey(SubscriptionMeal, on_delete=models.CASCADE)
     claimed_on = models.DateTimeField(auto_now_add=True)
+
+
+class WebPushSubscription(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    endpoint = models.TextField()
+    p256dh = models.CharField(max_length=255)
+    auth = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Subscription for {self.user.username}"
 
 

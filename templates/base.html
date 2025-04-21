@@ -28,6 +28,13 @@
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- Toastify JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
  {%block head %}{%endblock%}
 </head>
 
@@ -176,18 +183,17 @@
                         <h6>WORKING HOURS</h6>
                         <ul>
                             <li>Monday - Friday: 08:00 am – 08:30 pm</li>
-                            <li>Saturday: 10:00 am – 16:30 pm</li>
-                            <li>Sunday: 10:00 am – 16:30 pm</li>
+                           
+                            
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__logo">
-                            <a href="#"><img src="/static/img/footer-logo.png" alt=""></a>
+                            <a href="#"><img src="/static/img/hero/" alt=""></a>
                         </div>
-                        <p>Lorem ipsum dolor amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore dolore magna aliqua.</p>
+                        
                         <div class="footer__social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-twitter"></i></a>
@@ -213,7 +219,7 @@
                 <div class="row">
                     <div class="col-lg-7">
                         <p class="copyright__text text-white"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                          Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                          Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved 
                           <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                       </p>
                   </div>
@@ -253,6 +259,25 @@
 <script src="/static/js/owl.carousel.min.js"></script>
 <script src="/static/js/jquery.nicescroll.min.js"></script>
 <script src="/static/js/main.js"></script>
+
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% for message in messages %}
+            Toastify({
+                text: "{{ message|escapejs }}",
+                duration: 5000,
+                close: true,
+                gravity: "top", // top or bottom
+                position: "right", // left, center or right
+                backgroundColor: "{% if 'success' in message.tags %}green{% elif 'error' in message.tags or 'danger' in message.tags %}red{% elif 'warning' in message.tags %}orange{% else %}blue{% endif %}",
+                stopOnFocus: true,
+            }).showToast();
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
 </body>
 
 </html>

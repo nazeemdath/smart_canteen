@@ -13,17 +13,30 @@ from django.views.decorators.csrf import csrf_exempt
 from django import forms
 from .models import Feedback
 from decimal import Decimal  
+from django.contrib import messages
 
 
 def checkout(request):
     cart_items = CartItem.objects.filter(user=request.user, order__isnull=True)
+
     # ✅ If cart is empty, return zero values
     if not cart_items.exists():
         request.session.pop("discount_amount", None)
         request.session.pop("coupon_code", None)
         request.session.pop("final_total", None)
         request.session.modified = True  
-        return render(request, "shop/checkout.html", {"cart_items": [], "total_cart_price": 0, "discount_amount": 0, "final_total": 0})
+        return render(request, "shop/checkout.html", {
+            "cart_items": [],
+            "total_cart_price": 0,
+            "discount_amount": 0,
+            "final_total": 0
+        })
+
+    # ✅ Stock validation check
+    for item in cart_items:
+        if item.product_id.stock < item.quantity:
+            messages.warning(request, f"Sorry, only {item.product_id.stock} item(s) left for '{item.product_id.name}'. Please update your cart.")
+            return redirect("cart:cart")  # 🔁 Redirect to cart page if stock insufficient
 
     # ✅ Calculate subtotal per item
     for item in cart_items:
@@ -159,8 +172,8 @@ def payment_success(request):
             item.save()
 
             
-        # ✅ Clear the user's cart
-        # cart_items.delete()
+     
+        
      # ✅ Clear the coupon discount session data
         request.session.pop("discount_amount", None)
         request.session.pop("coupon_code", None)
@@ -169,9 +182,9 @@ def payment_success(request):
 
         # ✅ Generate a token
         token = f"ORD{order.id}{order.user.id:04d}"
-        print(order.id)  # 101
-        print(order.user.id)  # 7
         request.session["order_token"] = token
+        order.token_number = token  # ✅ Save it in the Order table
+        order.save()
         
 
         # ✅ Send an email confirmation

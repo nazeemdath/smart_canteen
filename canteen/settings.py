@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'main',
     'authentication',
     'cart',
-    'checkout'
+    'checkout',
+    'webpush',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,28 @@ LOGIN_URL = '/user_login/'  # Redirects unauthorized users to this page
 
 RAZORPAY_KEY_ID = "rzp_test_SKA7pG9S47EI84"
 RAZORPAY_KEY_SECRET = "ATnSwK9297SQ9AyevVPxANWC"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": """-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoEtv+yTf7UkBtXCi2OPM5s5u/Um0
+fbBD9iAZ+c70gH970ujwDFaLnOjtwpbD5aj9p4Qo8uVpl7QKdpVwmsyVfQ==
+-----END PUBLIC KEY-----""",
+    
+    "VAPID_PRIVATE_KEY": """-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgCxnGPNZutzDLi1OA
+LzTomRr80xICKuZXFZtgGw22niyhRANCAASgS2/7JN/tSQG1cKLY48zmzm79SbR9
+sEP2IBn5zvSAf3vS6PAMVouc6O3ClsPlqP2nhCjy5WmXtAp2lXCazJV9
+-----END PRIVATE KEY-----""",
+    
+    "VAPID_ADMIN_EMAIL": "nazeemdath.1@gmail.com"
+}
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'nazeemdath@gmail.com'           # Your Gmail address
+EMAIL_HOST_PASSWORD = 'gqlnlpqncrrnzzvn'        # App Password from Google
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

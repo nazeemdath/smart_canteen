@@ -76,77 +76,52 @@
     </div>
   </div>
 </section>
-<!-- About Section End -->
 
-<!-- Categories Section Begin -->
-{% comment %} <div class="categories">
-  <div class="container">
-    <div class="row">
-      <div class="categories__slider owl-carousel">
-        <div class="categories__item">
-          <div class="categories__item__icon">
-            <span class="flaticon-029-cupcake-3"></span>
-            <h5>Cupcake</h5>
-          </div>
-        </div>
-        <div class="categories__item">
-          <div class="categories__item__icon">
-            <span class="flaticon-034-chocolate-roll"></span>
-            <h5>Butter</h5>
-          </div>
-        </div>
-        <div class="categories__item">
-          <div class="categories__item__icon">
-            <span class="flaticon-005-pancake"></span>
-            <h5>Red Velvet</h5>
-          </div>
-        </div>
-        <div class="categories__item">
-          <div class="categories__item__icon">
-            <span class="flaticon-030-cupcake-2"></span>
-            <h5>Biscuit</h5>
-          </div>
-        </div>
-        <div class="categories__item">
-          <div class="categories__item__icon">
-            <span class="flaticon-006-macarons"></span>
-            <h5>Donut</h5>
-          </div>
-        </div>
-        <div class="categories__item">
-          <div class="categories__item__icon">
-            <span class="flaticon-006-macarons"></span>
-            <h5>Cupcake</h5>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> {% endcomment %}
-<!-- Categories Section End -->
 
 <!-- Product Section Begin -->
 <section class="product spad">
   <div class="container">
     <div class="row">
       {% for product in products %}
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="product__item">
-          <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
-            <div class="product__label">
-              <span>{{ product.category }}</span>
-            </div>
-          </div>
-          <div class="product__item__text">
-            <h6><a href="#">{{ product.name }}</a></h6>
-            <div class="product__item__price">₹{{ product.price }}</div>
-            <div class="cart_add">
-              <a href="{% url 'cart:cart' %}">Add to Cart</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
+                                    <div class="product__label">
+                                        <span>{{ product.category }}</span>
+                                    </div>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">{{ product.name }}</a></h6>
+                                    <div class="product__item__price">₹{{ product.price }}</div>
+                                    <!-- ⭐ Show Star Rating -->
+                                    {% comment %} <div class="rating">
+                                        {% if product.avg_rating %}
+                                            {% for _ in ''|rjust:product.avg_rating|floatformat:0 %}
+                                                <span class="icon_star"></span>
+                                            {% endfor %}
+                                            <span>({{ product.avg_rating }}/5)</span>
+                                        {% else %}
+                                            <span>No ratings yet</span>
+                                        {% endif %}
+                                    </div> {% endcomment %}
+                                    <!-- ⭐ Calories Display -->
+                                    <div class="calories">
+                                     <p><strong>Calories:</strong> {{ product.calories }} kcal</p>
+                                    </div>
+                                    {% if product.stock > 0 %}
+                                        <div class="cart_add">
+                                            <a href="{% url 'cart:cartadd' product.id %}">Add to cart</a>
+                                        </div>
+                                    {% else %}
+                                        <div class="out_of_stock">
+                                            <span style="color: red; font-weight: bold;">Out of Stock</span>
+                                        </div>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
     </div>
   </div>
 </section>
@@ -308,57 +283,7 @@
 
 
 
-<!-- Instagram Section Begin -->
-{% comment %} <section class="instagram spad">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-4 p-0">
-        <div class="instagram__text">
-          <div class="section-title">
-            <span>Follow us on instagram</span>
-            <h2>Sweet moments are saved as memories.</h2>
-          </div>
-          <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
-        </div>
-      </div>
-      <div class="col-lg-8">
-        <div class="row">
-          <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-            <div class="instagram__pic">
-              <img src="/static/img/instagram/instagram-1.jpg" alt="" />
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-            <div class="instagram__pic middle__pic">
-              <img src="/static/img/instagram/instagram-2.jpg" alt="" />
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-            <div class="instagram__pic">
-              <img src="/static/img/instagram/instagram-3.jpg" alt="" />
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-            <div class="instagram__pic">
-              <img src="/static/img/instagram/instagram-4.jpg" alt="" />
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-            <div class="instagram__pic middle__pic">
-              <img src="/static/img/instagram/instagram-5.jpg" alt="" />
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-            <div class="instagram__pic">
-              <img src="/static/img/instagram/instagram-3.jpg" alt="" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> {% endcomment %}
-<!-- Instagram Section End -->
+
 
 <!-- Map Begin -->
 <div class="map">
@@ -388,6 +313,73 @@
   </div>
 </div>
 <!-- Map End -->
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/static/js/service-worker.js');
+    }
+</script>
+
+<script>
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        console.warn("Push messaging is not supported.");
+        return;
+    }
+
+    const permission = Notification.permission;
+
+    if (permission === "granted" || permission === "denied") {
+        return;
+    }
+
+    const userConfirmed = confirm("Would you like to receive notifications when your order is ready?");
+    if (userConfirmed) {
+        try {
+            const registration = await navigator.serviceWorker.register('/static/js/service-worker.js');
+
+            const publicKey = "BKBLb_sk3-1JAbVwotjjzObObv1JtH2wQ_YgGfnO9IB_e9Lo8AxWi5zo7cKWw-Wo_aeEKPLlaZe0CnaVcJrMlX0";  // base64url (no padding)
+
+            const convertedKey = urlBase64ToUint8Array(publicKey);
+
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: convertedKey
+            });
+
+            await fetch('/save-subscription/', {
+                method: 'POST',
+                body: JSON.stringify(subscription),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            console.log("Subscription saved!");
+        } catch (error) {
+            console.error("Subscription failed:", error);
+        }
+    }
+});
+</script>
+
+
 
 {% endblock content %}
+
+
+
 

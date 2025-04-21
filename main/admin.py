@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Product
-from .models import MealSubscriptionPlan, UserSubscription,SubscriptionMeal,ClaimedMeal
+from .models import MealSubscriptionPlan, UserSubscription,SubscriptionMeal,ClaimedMeal, WebPushSubscription
+from django.contrib import admin
+
 
 
 @admin.register(Product)
@@ -15,4 +17,5 @@ admin.site.register(MealSubscriptionPlan)
 admin.site.register(UserSubscription)
 admin.site.register(SubscriptionMeal)
 admin.site.register(ClaimedMeal)
+admin.site.register(WebPushSubscription)
 
