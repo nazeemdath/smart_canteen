@@ -1,29 +1,48 @@
 {% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
 
+{% block title %}My Subscription{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block extra_js %}
 {% block content %}
-<h2>My Subscription</h2>
-{% if user_subscription %}
-    <p>Plan: {{ user_subscription.plan.name }}</p>
-    <p>Valid Until: {{ user_subscription.end_date }}</p>
-    <p>Meals Per Day: {{ user_subscription.plan.meals_per_day }}</p>
+<div class="subscription-wrapper">
+    <h2 class="subscription-title">My Subscription</h2>
 
-    <h3>Available Meals for Today</h3>
-    <ul>
-        {% for meal in available_meals %}
-            <li>
-                {{ meal.name }}  
-                {% if user_subscription.is_active %}
-                    <form method="POST" action="{% url 'claim_meal' meal.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Claim</button>
-                    </form>
-                {% endif %}
-            </li>
-        {% empty %}
-            <p>No meals available for today.</p>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>You do not have an active subscription.</p>
-{% endif %}
+    {% if user_subscription %}
+        <div class="subscription-details">
+            <p><strong>Plan:</strong> {{ user_subscription.plan.name }}</p>
+            <p><strong>Valid Until:</strong> {{ user_subscription.end_date }}</p>
+            <p><strong>Meals Per Day:</strong> {{ user_subscription.plan.meals_per_day }}</p>
+        </div>
+
+        <h3 class="meals-title">Available Meals for Today</h3>
+        <ul class="meal-list">
+            {% for meal in available_meals %}
+                <li class="meal-card">
+                    <div class="meal-image">
+                        <img src="{{ meal.product.image.url }}" alt="{{ meal.name }}">
+                    </div>
+                    <div class="meal-info">
+                        <p class="meal-name">{{ meal.name }}</p>
+                        {% if user_subscription.is_active %}
+                            <form method="POST" action="{% url 'claim_meal' meal.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="claim-btn">Claim</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </li>
+            {% empty %}
+                <p>No meals available for today.</p>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-subscription-msg">You do not have an active subscription.</p>
+    {% endif %}
+</div>
 {% endblock %}

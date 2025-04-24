@@ -12,22 +12,30 @@
         <p><strong>Remaining Meals Today:</strong> {{ remaining_meals }}</p>
 
         <!-- User's Claimable Meals -->
-        <h3>Your Claimable Meals</h3>   
-        {% if user_available_meals %}
-            <ul>
-                {% for meal in user_available_meals %}
-                    <li>
-                        {{ meal.product }}
-                        <form method="POST" action="{% url 'claim_meal' meal.id %}">
-                            {% csrf_token %}
-                            <button type="submit">Claim</button>
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
+        <h3>Your Claimable Meals</h3>
+
+        {% if available_meals %}
+        <div class="meal-card-grid">
+            {% for meal in available_meals %}
+            <div class="meal-card">
+                <img src="{{ meal.product.image.url }}" alt="{{ meal.product.name }}">
+                <h4>{{ meal.product.name }}</h4>
+
+                {% if remaining_meals > 0 %}
+                <form method="POST" action="{% url 'claim_meal' meal.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Claim</button>
+                </form>
+                {% else %}
+                <p style="color:red;">Claim limit reached for today.</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <p>You have no meals left to claim today.</p>
+        <p>No meals available today.</p>
         {% endif %}
+
     {% else %}
         <form method="POST" action="">
             {% csrf_token %}

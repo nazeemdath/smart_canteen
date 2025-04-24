@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from cart.models import CartItem
 from checkout.models import Order
+import re
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 
@@ -17,33 +20,58 @@ def signup(request):
         email = request.POST.get("email")
         role = request.POST.get("role")
         password = request.POST.get("password")
-        confirm_password = request.POST.get("confirm_password")  # ✅ FIXED field name
+        confirm_password = request.POST.get("confirm_password")
 
-        # Check if passwords match
         flag = False
-    
+
+        # ✅ Password match check
         if password != confirm_password:
             messages.error(request, "Passwords do not match.", extra_tags="password_mismatch")
-            flag = True # ✅ Redirect using URL name
+            flag = True
 
-        # Check if username exists
+        # ✅ Username & email uniqueness check
         if CustomUser.objects.filter(username=username).exists():
             messages.error(request, "Username already taken.", extra_tags="username_taken")
             flag = True
         
         if CustomUser.objects.filter(email=email).exists():
-            messages.error(request, "email already taken.", extra_tags="email_taken")
+            messages.error(request, "Email already taken.", extra_tags="email_taken")
             flag = True
-        
-        if flag:
-            return redirect("signup")  # ✅ Redirect to signup page
 
-        # Create user
+        # ✅ Password strength check using Django validator
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            for msg in e.messages:
+                messages.error(request, msg, extra_tags="weak_password")
+            flag = True
+
+        # ✅ You can also add custom rules like:
+        if len(password) < 8:
+            messages.error(request, "Password must be at least 8 characters long.", extra_tags="weak_password")
+            flag = True
+        if not re.search(r"[A-Z]", password):
+            messages.error(request, "Password must include at least one uppercase letter.", extra_tags="weak_password")
+            flag = True
+        if not re.search(r"[a-z]", password):
+            messages.error(request, "Password must include at least one lowercase letter.", extra_tags="weak_password")
+            flag = True
+        if not re.search(r"[0-9]", password):
+            messages.error(request, "Password must include at least one digit.", extra_tags="weak_password")
+            flag = True
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+            messages.error(request, "Password must include at least one special character.", extra_tags="weak_password")
+            flag = True
+
+        if flag:
+            return redirect("signup")
+
+        # ✅ Create user
         user = CustomUser.objects.create_user(username=username, email=email, password=password, role=role)
         user.save()
 
         messages.success(request, "Signup successful! You can now log in.")
-        return redirect("user_login")  # ✅ Redirect to login page
+        return redirect("user_login")
 
     return render(request, "authentication/signup.html")
 

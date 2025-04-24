@@ -43,10 +43,7 @@ def shop(request):
 
 def index(request):
     products = Product.objects.all()  # Fetch all products
-    # for product in products:
-    #     product.avg_rating = product.average_rating() 
-    feedbacks = list(Feedback.objects.all())  # Convert QuerySet to a list
-    print("Feedbacks:", feedbacks)  # Debugging
+    feedbacks = Feedback.objects.all().order_by('-created_at')  # Order feedbacks by latest
     return render(request, 'index.html', {'products': products, "feedbacks": feedbacks})
 
 def search_products(request):
@@ -69,6 +66,7 @@ def subscription_plans(request):
 
     # Fetch today's available meals
     available_meals = SubscriptionMeal.objects.filter(date_available=date.today(), is_available=True)
+    print( available_meals )
 
     # Fetch user's claimed meals today
     claimed_today = 0

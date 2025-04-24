@@ -4484,3 +4484,143 @@ button:hover {
   white-space: normal;
 }
 
+.meal-subscription-wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #f9f9fb;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.meal-subscription-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.08);
+}
+
+.active-subscription p {
+  margin: 8px 0;
+  color: #2c3e50;
+}
+
+h3 {
+  margin-top: 30px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  color: #34495e;
+}
+
+.meals-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.meals-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.meal-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.btn-claim, .btn-subscribe {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-claim:hover, .btn-subscribe:hover {
+  background-color: #2980b9;
+}
+
+.subscription-form {
+  margin-top: 20px;
+}
+
+.subscription-list {
+  list-style: none;
+  padding: 0;
+}
+
+.subscription-item {
+  background-color: #f4f6f7;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+}
+
+.plan-description p {
+  color: #7f8c8d;
+  margin-top: 10px;
+}
+
+.no-meals {
+  color: #c0392b;
+  margin-top: 20px;
+}
+
+.meal-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.meal-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.meal-card:hover {
+  transform: translateY(-5px);
+}
+
+.meal-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.meal-card h4 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.claim-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.claim-btn:hover {
+  background-color: #218838;
+}
+

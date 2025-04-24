@@ -52,9 +52,9 @@ def send_order_ready_email(sender, instance, created, **kwargs):
         print(f"[DEBUG] Sending email for Order #{instance.id}")
         
         subject = 'Your Order is Ready!'
-        message = f'Hi {instance.user.first_name}, your order #{instance.id} is ready for pickup.'
+        message = f'Hi {instance.user.username}, your order #{instance.id} is ready for pickup.'
         recipient = instance.user.email
-        print(f"[DEBUG] Sending email to {recipient}")
+        
 
         send_mail(
             subject,
