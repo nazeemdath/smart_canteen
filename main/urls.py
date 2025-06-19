@@ -15,6 +15,7 @@ urlpatterns=[
     path("claim-meal/<int:meal_id>/", views.claim_meal, name="claim_meal"),
     path("health/", views.health_dashboard, name="health_dashboard"),
     path('save-subscription/', views.save_subscription, name='save_subscription'),
+    path("homepage/", views.homepage, name='homepage'),
    
     
 ]

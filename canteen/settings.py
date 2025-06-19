@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'cart',
     'checkout',
     'webpush',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -171,3 +172,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'nazeemdath@gmail.com'           # Your Gmail address
 EMAIL_HOST_PASSWORD = 'gqlnlpqncrrnzzvn'        # App Password from Google
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+

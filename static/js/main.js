@@ -235,3 +235,12 @@
       });
 
 })(jQuery);
+
+$(".hero__slider").owlCarousel({
+    loop: true,
+    items: 1,
+    dots: true,
+    nav: true,
+    autoplay: true,
+    autoplayTimeout: 5000
+});

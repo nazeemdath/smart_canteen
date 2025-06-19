@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from django.contrib import messages
-from .models import MealSubscriptionPlan, UserSubscription,SubscriptionMeal, ClaimedMeal
+from .models import MealSubscriptionPlan, UserSubscription,SubscriptionMeal, ClaimedMeal,Banner
 from django.views.decorators.csrf import csrf_exempt
 from datetime import timedelta, date
 from django.core.mail import send_mail
@@ -44,7 +44,8 @@ def shop(request):
 def index(request):
     products = Product.objects.all()  # Fetch all products
     feedbacks = Feedback.objects.all().order_by('-created_at')  # Order feedbacks by latest
-    return render(request, 'index.html', {'products': products, "feedbacks": feedbacks})
+    banners = Banner.objects.filter(is_active=True).order_by('-created_at')
+    return render(request, 'index.html', {'products': products, "feedbacks": feedbacks,'banners': banners})
 
 def search_products(request):
     query = request.GET.get("q", "")
@@ -384,3 +385,13 @@ def save_subscription(request):
             subscription.save()
 
         return JsonResponse({'status': 'ok'})
+    
+
+@csrf_exempt
+@login_required
+def cont(request):
+    return render(request, "contact.html")
+
+def homepage(request):
+    banners = Banner.objects.all()
+    return render(request, 'your_app/home.html', {'banners': banners})
