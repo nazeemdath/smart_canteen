@@ -34,11 +34,13 @@
   <div class="owl-carousel banner-carousel">
     {% for banner in banners %}
       <div class="slide-item">
-        <img src="{{ banner.image.url }}" alt="Banner Image" />
+        <img src="{{ banner.image.url }}" alt="Banner Image" class="img-fluid hero-image" />
+        {% comment %} <a href="{% url 'shop' %}" class="shop-button">Shop Now</a> {% endcomment %}
       </div>
     {% endfor %}
   </div>
 </section>
+
 
 
 
