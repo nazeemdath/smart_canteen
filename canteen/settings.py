@@ -173,4 +173,10 @@ EMAIL_HOST_USER = 'nazeemdath@gmail.com'           # Your Gmail address
 EMAIL_HOST_PASSWORD = 'gqlnlpqncrrnzzvn'        # App Password from Google
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'smart-canteen-620w.onrender.com'
+]
+
 
