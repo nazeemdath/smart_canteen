@@ -3217,6 +3217,43 @@ ol {
 }
 /* Tablet Device = 768px */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+  /* Ensure hamburger toggle and logo are visible on tablets */
+  .canvas__open {
+    display: block;
+    font-size: 22px;
+    color: #111111;
+    height: 35px;
+    width: 35px;
+    line-height: 35px;
+    text-align: center;
+    border: 1px solid #111111;
+    border-radius: 2px;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 34px;
+    z-index: 110;
+  }
+
+  /* Hide desktop nav to use offcanvas on tablets */
+  .header__menu {
+    display: none;
+  }
+
+  /* Reduce clutter so centered logo isn't overlapped */
+  .header__top__left,
+  .header__top__right {
+    display: none;
+  }
+
+  /* Make sure logo appears above other elements */
+  .header__logo {
+    z-index: 120;
+  }
+
+  .header .container {
+    position: relative;
+  }
   .header__menu ul li a {
     padding: 20px 28px 18px;
   }
@@ -3377,6 +3414,21 @@ ol {
 }
 /* Wide Mobile = 480px */
 @media only screen and (max-width: 767px) {
+  /* Keep header visible above page content on mobile */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  .header__top {
+    z-index: 200;
+    background: #ffffff;
+  }
+
+  .header__logo {
+    z-index: 201;
+  }
   .canvas__open {
     display: block;
     font-size: 22px;

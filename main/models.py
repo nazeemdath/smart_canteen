@@ -32,6 +32,15 @@ class Product(models.Model):
     #         return round(feedbacks.aggregate(models.Avg("rating"))["rating__avg"], 1)
     #     return 0  # Default rating if no feedback is present
 
+    @property
+    def image_url(self):
+        if self.image:
+            try:
+                return self.image.url
+            except ValueError:
+                return ""
+        return ""
+
     def __str__(self):
         return self.name
 
@@ -72,10 +81,12 @@ class UserSubscription(models.Model):
     active = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        """ Auto-calculate end date and meal balance when a subscription is created """
+        """ Auto-calculate end date and meal balance when a subscription is created if not set """
         if not self.id:  # Only on first creation
-            self.end_date = date.today() + timedelta(days=self.plan.duration_days)
-            self.remaining_meals = self.plan.meals_per_day * self.plan.duration_days  # Calculate meals
+            if not self.end_date:
+                self.end_date = date.today() + timedelta(days=self.plan.duration_days)
+            if not self.remaining_meals:
+                self.remaining_meals = self.plan.meals_per_day * self.plan.duration_days  # Calculate meals
 
         super().save(*args, **kwargs)
 

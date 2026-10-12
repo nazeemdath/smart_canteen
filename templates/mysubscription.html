@@ -25,7 +25,7 @@
             {% for meal in available_meals %}
                 <li class="meal-card">
                     <div class="meal-image">
-                        <img src="{{ meal.product.image.url }}" alt="{{ meal.name }}">
+                        <img src="{% if meal.product.image %}{{ meal.product.image.url }}{% else %}/static/img/default-food.png{% endif %}" alt="{{ meal.product.name }}">
                     </div>
                     <div class="meal-info">
                         <p class="meal-name">{{ meal.name }}</p>

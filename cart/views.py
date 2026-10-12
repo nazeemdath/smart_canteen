@@ -121,6 +121,7 @@ def cartadd(request, product_id):
 
     messages.success(request, f"{product.name} added to cart!",extra_tags="cart")
     return redirect('cart:cart')
+@login_required
 def delete(request, item_id):
     """
     Remove a specific item from the cart (both session and database).
@@ -134,7 +135,7 @@ def delete(request, item_id):
         request.session.modified = True
 
     # Remove from database
-    cart_item = get_object_or_404(CartItem, id=item_id,user=request.user)
+    cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
     cart_item.delete()
     remaining_items = CartItem.objects.filter(user=request.user).exists()
 
@@ -147,13 +148,16 @@ def delete(request, item_id):
     return redirect('cart:cart')  # Redirect to cart page
 
 
-
+@login_required
 def update(request, item_id):
     if request.method == "POST":
-        new_quantity = int(request.POST.get("quantity", 1))
+        try:
+            new_quantity = int(request.POST.get("quantity", 1))
+        except (ValueError, TypeError):
+            new_quantity = 1
 
         # ✅ Get the cart item
-        cart_item = get_object_or_404(CartItem, id=item_id,user=request.user)
+        cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
         product = cart_item.product_id  # ForeignKey to Product
 
         # ✅ Check if requested quantity is within available stock
@@ -171,6 +175,8 @@ def update(request, item_id):
 
     return redirect("cart:cart")
 
+
+@login_required
 def apply_coupon(request): 
     if request.method == "POST":
         coupon_code = request.POST.get("coupon_code", "").strip().upper()
@@ -207,14 +213,10 @@ def apply_coupon(request):
             total_discount = Decimal(0)
 
             for item in applicable_items:
-                if item.subtotal is None:
-                    item.subtotal = Decimal(item.price) * item.quantity  # ✅ Ensure Decimal type
-                    item.save()
-
-                item_discount = item.subtotal * discount_percentage  # ✅ Both are Decimal now
-                item.discounted_price = max(item.subtotal - item_discount, Decimal(0))
+                item.coupon = coupon
                 item.save()
 
+                item_discount = item.subtotal * discount_percentage
                 total_discount += item_discount
 
             # ✅ Update session values
@@ -232,17 +234,14 @@ def apply_coupon(request):
             messages.error(request, "❌ Invalid coupon code.")
 
     return redirect("cart:cart")
+
+
 @login_required
 def track_order(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     context = {
         "order": order,
-        "status":order.status
+        "status": order.status
     }
-    return render(request,'shop/track_order.html', context)
+    return render(request, 'shop/track_order.html', context)
 
-def cart_count(request):
-    if request.user.is_authenticated:
-        cart_items = CartItem.objects.filter(user=request.user)  # Adjust based on your Cart model
-        return {"cart_count": cart_items.count()}
-    return {"cart_count": 0}  # Default for unauthenticated users

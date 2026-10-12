@@ -18,7 +18,7 @@
         <div class="meal-card-grid">
             {% for meal in available_meals %}
             <div class="meal-card">
-                <img src="{{ meal.product.image.url }}" alt="{{ meal.product.name }}">
+                <img src="{% if meal.product.image %}{{ meal.product.image.url }}{% else %}/static/img/default-food.png{% endif %}" alt="{{ meal.product.name }}">
                 <h4>{{ meal.product.name }}</h4>
 
                 {% if remaining_meals > 0 %}

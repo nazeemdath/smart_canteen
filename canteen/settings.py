@@ -21,13 +21,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-71l2$9wey-99imvl5i44&b0byeo7_&$6y*#-f^ln5f0)p2tvsr'
+# SECURITY: Secret key loaded from environment variable.
+# Generate a new one: python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-dev-only-change-me-in-production'
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY: Debug mode — always False in production.
+DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = []
+# Hosts allowed to serve this application.
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS',
+    '127.0.0.1,localhost'
+).split(',')
 
 
 # Application definition
@@ -49,14 +57,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files — must be right after SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'canteen.urls'
@@ -73,7 +80,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
-                "cart.context_processors.cart_count",
+                'cart.context_processors.cart_count',
             ],
         },
     },
@@ -117,7 +124,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -136,8 +142,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# Media files (user-uploaded content like product images)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'static'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -146,45 +153,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.CustomUser'
 
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Store session in DB
+# Session configuration
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 86400  # Session lasts 1 day
-SESSION_SAVE_EVERY_REQUEST = True  # Save session on every request
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Session persists after closing the browser
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-LOGIN_URL = '/user_login/'  # Redirects unauthorized users to this page
+LOGIN_URL = '/user_login/'
 
-RAZORPAY_KEY_ID = "rzp_test_SKA7pG9S47EI84"
-RAZORPAY_KEY_SECRET = "ATnSwK9297SQ9AyevVPxANWC"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Razorpay payment gateway (test keys for development)
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', '')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')
 
+# Web push notification settings
 WEBPUSH_SETTINGS = {
-    "VAPID_PUBLIC_KEY": """-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoEtv+yTf7UkBtXCi2OPM5s5u/Um0
-fbBD9iAZ+c70gH970ujwDFaLnOjtwpbD5aj9p4Qo8uVpl7QKdpVwmsyVfQ==
------END PUBLIC KEY-----""",
-    
-    "VAPID_PRIVATE_KEY": """-----BEGIN PRIVATE KEY-----
-MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgCxnGPNZutzDLi1OA
-LzTomRr80xICKuZXFZtgGw22niyhRANCAASgS2/7JN/tSQG1cKLY48zmzm79SbR9
-sEP2IBn5zvSAf3vS6PAMVouc6O3ClsPlqP2nhCjy5WmXtAp2lXCazJV9
------END PRIVATE KEY-----""",
-    
-    "VAPID_ADMIN_EMAIL": "nazeemdath.1@gmail.com"
+    "VAPID_PUBLIC_KEY": os.environ.get('VAPID_PUBLIC_KEY', ''),
+    "VAPID_PRIVATE_KEY": os.environ.get('VAPID_PRIVATE_KEY', ''),
+    "VAPID_ADMIN_EMAIL": os.environ.get('VAPID_ADMIN_EMAIL', ''),
 }
 
-
+# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'nazeemdath@gmail.com'           # Your Gmail address
-EMAIL_HOST_PASSWORD = 'gqlnlpqncrrnzzvn'        # App Password from Google
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'smart-canteen-620w.onrender.com'
-]
-
-
