@@ -18,6 +18,18 @@ media/
 
 # Environment variables
 .env
+.env.*
+!.env.example
+
+# Local Django configuration
+local_settings.py
+
+# Test and tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # IDE / Editor
 .vscode/
