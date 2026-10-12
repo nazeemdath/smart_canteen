@@ -25,23 +25,32 @@ class Order(models.Model):
         return f"Order {self.id} - {self.user.username} - {self.status}"
 
     def save(self, *args, **kwargs):
-        if self.status == "Processing":
-            send_mail(
-                "Your Order is Being Prepared",
-                "Your order is now being prepared. You'll be notified when it's ready for pickup.",
-                settings.EMAIL_HOST_USER,
-                [self.user.email],
-                fail_silently=True,
-            )
+        status_changed = False
+        if self.pk:
+            orig = Order.objects.filter(pk=self.pk).values("status").first()
+            if orig and orig["status"] != self.status:
+                status_changed = True
+        else:
+            status_changed = True
 
-        elif self.status == "Delivered":
-            send_mail(
-                "Order Ready for Pickup!",
-                "Your order is ready for pickup at the counter!",
-                settings.EMAIL_HOST_USER,
-                [self.user.email],
-                fail_silently=True,
-            )
+        if status_changed:
+            from_email = getattr(settings, "DEFAULT_FROM_EMAIL", None) or settings.EMAIL_HOST_USER
+            if self.status == "Processing":
+                send_mail(
+                    "Your Order is Being Prepared",
+                    "Your order is now being prepared. You'll be notified when it's ready for pickup.",
+                    from_email,
+                    [self.user.email],
+                    fail_silently=True,
+                )
+            elif self.status == "Delivered":
+                send_mail(
+                    "Order Ready for Pickup!",
+                    "Your order is ready for pickup at the counter!",
+                    from_email,
+                    [self.user.email],
+                    fail_silently=True,
+                )
 
         super().save(*args, **kwargs)  
 

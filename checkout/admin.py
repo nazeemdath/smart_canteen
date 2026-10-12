@@ -11,7 +11,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ("total_sales",)
 
     def total_sales(self, obj=None):
-        total = Order.objects.filter(status="paid").aggregate(Sum("order_total"))["order_total__sum"]
+        total = Order.objects.filter(status__in=["paid", "Paid"]).aggregate(Sum("order_total"))["order_total__sum"]
         return f"₹{total if total else 0}"
     total_sales.short_description = "Total Sales"
 
@@ -19,7 +19,7 @@ class OrderAdmin(admin.ModelAdmin):
         if change:
             previous = Order.objects.get(pk=obj.pk)
             super().save_model(request, obj, form, change)
-            if previous.status != obj.status and obj.status == "Ready for Pickup":
+            if previous.status != obj.status and obj.status in ["Ready for Pickup", "ready", "Ready"]:
                 send_push_notification(
                     user=obj.user,
                     title="Order Ready!",
